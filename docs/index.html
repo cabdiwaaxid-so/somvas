@@ -1,1 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lightweight 2D Game Framework for JavaScript - Create games for mobile and desktop">
+    <meta property="og:title" content="Somvas - Lightweight 2D Game Framework">
+    <meta property="og:description" content="A modular framework for creating 2D games that work on both mobile and desktop">
+    <meta property="og:type" content="website">
+    <title>Somvas - Lightweight 2D Game Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for documentation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            backdrop-filter: blur(8px);
+        }
+        
+        .toc-link.active {
+            color: rgb(2 132 199);
+            font-weight: 600;
+            border-left: 3px solid rgb(2 132 199);
+        }
+        
+        /* Print styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            body {
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            
+            pre, code {
+                white-space: pre-wrap !important;
+                word-break: break-word;
+            }
+            
+            .break-inside-avoid {
+                break-inside: avoid;
+            }
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Code block styling */
+        pre code.hljs {
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        pre code{
+          white-space: pre-wrap;
+        }
+        
+        .copy-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn.copied {
+            background-color: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-200">
+    <!-- Header -->
+    <header class="sticky-nav bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700 no-print">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <h1 class="text-2xl font-bold text-primary-600 dark:text-primary-400">Somvas</h1>
+                <span class="bg-primary-100 text-primary-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">v1.0.0</span>
+                <p class="hidden md:inline text-sm text-gray-500 dark:text-gray-400 ml-2">Lightweight 2D Game Framework</p>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+                
+                <!-- Dark mode toggle -->
+                <button id="theme-toggle" class="p-2 rounded-md text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" aria-label="Toggle dark mode">
+                    <svg id="theme-icon-light" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg id="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile menu (hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+            <nav class="container mx-auto px-4 py-3">
+                <ul class="space-y-2">
+                    <li><a href="#quick-start" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Quick Start</a></li>
+                    <li><a href="#installation" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Installation</a></li>
+                    <li><a href="#core-concepts" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Core Concepts</a></li>
+                    <li><a href="#api-reference" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">API Reference</a></li>
+                    <li><a href="#examples" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Examples</a></li>
+                    <li><a href="#troubleshooting" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Troubleshooting</a></li>
+                    <li><a href="#changelog" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">Changelog</a></li>
+                    <li><a href="#license" class="block py-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">License</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
+    <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row">
+        <!-- Sidebar TOC -->
+        <aside class="hidden md:block w-64 flex-shrink-0 mr-8 no-print">
+            <div class="sticky top-20 pt-2">
+                <nav class="space-y-1">
+                    <a href="#quick-start" class="toc-link block py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md">Quick Start</a>
+                    <a href="#installation" class="toc-link block py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md">Installation</a>
+                    <a href="#core-concepts" class="toc-link block py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md">Core Concepts</a>
+                    <a href="#api-reference" class="toc-link block py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md">API Reference</a>
+                    <a href="#examples" class="toc-link block py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md">Examples</a>
+                    <a href="#troubleshooting" class="toc-link block py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md">Troubleshooting</a>
+                    <a href="#changelog" class="toc-link block py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md">Changelog</a>
+                    <a href="#license" class="toc-link block py-2 px-4 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md">License</a>
+                </nav>
+                
+                <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-4 mb-3">On this page</h3>
+                    <nav class="space-y-1" id="on-this-page">
+                        <!-- Dynamic TOC will be inserted here by JavaScript -->
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1">
+            <!-- Introduction -->
+            <section class="mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Somvas Framework</h1>
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">A lightweight, modular framework for creating 2D games that work on both mobile and desktop devices.</p>
+                
+                <div class="bg-primary-50 dark:bg-primary-900/30 p-6 rounded-lg border border-primary-100 dark:border-primary-800">
+                    <h2 class="text-lg font-semibold text-primary-800 dark:text-primary-200 mb-2">Features</h2>
+                    <ul class="list-disc pl-5 text-primary-700 dark:text-primary-300 space-y-1">
+                        <li>Canvas rendering with game loop management</li>
+                        <li>GameObject and component system</li>
+                        <li>Asset loading for images and audio</li>
+                        <li>Input handling for keyboard, mouse, and touch</li>
+                        <li>Collision detection with Box and Circle colliders</li>
+                        <li>Scene management system</li>
+                        <li>Math utilities for game development</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Quick Start -->
+            <section id="quick-start" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Quick Start</h2>
+                
+                <p class="mb-4">Get started with Somvas in three simple steps:</p>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">1. Include the framework</h3>
+                        <div class="relative">
+                            <pre class="language-html"><code>&lt;script src="https://cdn.jsdelivr.net/gh/cabdiwaaxid-so/somvas@main/index.js"&gt;&lt;/script&gt;</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">2. Create HTML canvas</h3>
+                        <div class="relative">
+                            <pre class="language-html"><code>&lt;canvas id="gameCanvas"&gt;&lt;/canvas&gt;</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">3. Initialize your game</h3>
+                        <div class="relative">
+                            <pre class="language-javascript"><code>// Initialize the framework
+Somvas.init('gameCanvas', 800, 600);
+
+// Create a scene
+const mainScene = Somvas.createScene('main');
+
+// Create a game object
+const player = new Somvas.GameObject(400, 300);
+player.addComponent(new Somvas.Rectangle(50, 50, 'blue'));
+mainScene.add(player);
+
+// Set and start the scene
+Somvas.setScene('main');
+Somvas.start();</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Installation -->
+            <section id="installation" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Installation</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3">Browser (CDN)</h3>
+                        <p class="mb-3">Include the framework directly in your HTML file:</p>
+                        <div class="relative">
+                            <pre class="language-html"><code>&lt;!-- Latest version from CDN --&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/cabdiwaaxid-so/somvas@main/index.js"&gt;&lt;/script&gt;
+
+&lt;!-- Or download and include locally --&gt;
+&lt;script src="js/somvas.js"&gt;&lt;/script&gt;</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- Core Concepts -->
+            <section id="core-concepts" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Core Concepts</h2>
+                
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Initialization</h3>
+                        <p class="mb-3">Initialize the framework with a canvas element:</p>
+                        <div class="relative">
+                            <pre class="language-javascript"><code>// Initialize with existing canvas element
+Somvas.init('gameCanvas');
+
+// Or create a new canvas with custom dimensions
+Somvas.init(null, 800, 600);</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">GameObject</h3>
+                        <p class="mb-3">GameObjects are the basic entities in your game. They can have position, rotation, scale, and components:</p>
+                        <div class="relative">
+                            <pre class="language-javascript"><code>// Create a new GameObject at position (100, 200)
+const obj = new Somvas.GameObject(100, 200);
+
+// Set properties
+obj.rotation = Math.PI / 4; // 45 degrees
+obj.scaleX = 2;
+obj.scaleY = 0.5;
+obj.visible = true;</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Components</h3>
+                        <p class="mb-3">Components add functionality to GameObjects. Built-in components include Sprite, Text, Rectangle, and Circle:</p>
+                        <div class="relative">
+                            <pre class="language-javascript"><code>// Add a rectangle component
+obj.addComponent(new Somvas.Rectangle(50, 50, 'red'));
+
+// Add a text component
+obj.addComponent(new Somvas.Text('Hello World', {
+    font: '20px Arial',
+    fill: 'white'
+}));
+
+// Add a sprite component (after loading image)
+const sprite = new Somvas.Sprite(Somvas.AssetLoader.get('playerImage'), 64, 64);
+obj.addComponent(sprite);</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Scenes</h3>
+                        <p class="mb-3">Scenes manage collections of GameObjects and can have backgrounds:</p>
+                        <div class="relative">
+                            <pre class="language-javascript"><code>// Create a scene
+const scene = Somvas.createScene('main');
+
+// Set background color
+scene.background = '#87CEEB'; // Sky blue
+
+// Add game objects to the scene
+scene.add(player);
+scene.add(enemy);
+
+// Set as current scene
+Somvas.setScene('main');</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Asset Loading</h3>
+                        <p class="mb-3">Load images and audio files with the AssetLoader:</p>
+                        <div class="relative">
+                            <pre class="language-javascript"><code>// Load a single image
+Somvas.AssetLoader.loadImage('player', 'assets/player.png')
+    .then(() => {
+        console.log('Player image loaded');
+    })
+    .catch(error => {
+        console.error('Error loading image:', error);
+    });
+
+// Load multiple images
+Somvas.AssetLoader.loadImages({
+    player: 'assets/player.png',
+    enemy: 'assets/enemy.png',
+    background: 'assets/bg.jpg'
+}).then(() => {
+    console.log('All images loaded');
+    // Start your game here
+});</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Input Handling</h3>
+                        <p class="mb-3">Handle keyboard, mouse, and touch input:</p>
+                        <div class="relative">
+                            <pre class="language-javascript"><code>// In a component's update method
+update(deltaTime) {
+    // Keyboard input
+    if (Somvas.Input.isKeyPressed('ArrowRight')) {
+        this.gameObject.x += 5;
+    }
+    
+    // Mouse input
+    if (Somvas.Input.isMousePressed()) {
+        const mousePos = Somvas.Input.getMousePosition();
+        // Do something with mouse position
+    }
+    
+    // Touch input
+    if (Somvas.Input.isTouchPressed()) {
+        const touchPos = Somvas.Input.getTouchPosition();
+        // Do something with touch position
+    }
+}</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Collision Detection</h3>
+                        <p class="mb-3">Add colliders to GameObjects for collision detection:</p>
+                        <div class="relative">
+                            <pre class="language-javascript"><code>// Add a box collider
+player.setCollider(Somvas.BoxCollider, 50, 50);
+
+// Add a circle collider
+bullet.setCollider(Somvas.CircleCollider, 10);
+
+// Check for collisions in update
+update(deltaTime) {
+    for (const enemy of this.scene.find('enemy')) {
+        if (this.gameObject.checkCollision(enemy)) {
+            // Handle collision
+            console.log('Collision detected!');
+        }
+    }
+}</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Reference -->
+            <section id="api-reference" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">API Reference</h2>
+                
+                <div class="space-y-8">
+                    <!-- Main API Methods -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Main API Methods</h3>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Somvas.init(canvasId, width, height)</h4>
+                            <p class="mb-2">Initializes the framework with a canvas element.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> canvasId (string|undefined), width (number|undefined), height (number|undefined)</p>
+                                <p><strong>Returns:</strong> void</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Initialize with existing canvas
+Somvas.init('gameCanvas');
+
+// Create new canvas with dimensions
+Somvas.init(null, 800, 600);</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Somvas.start()</h4>
+                            <p class="mb-2">Starts the game loop.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> none</p>
+                                <p><strong>Returns:</strong> void</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Start the game
+Somvas.start();</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Somvas.stop()</h4>
+                            <p class="mb-2">Stops the game loop.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> none</p>
+                                <p><strong>Returns:</strong> void</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Stop the game
+Somvas.stop();</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Somvas.createScene(name)</h4>
+                            <p class="mb-2">Creates a new scene with the given name.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> name (string)</p>
+                                <p><strong>Returns:</strong> Scene instance</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Create a scene
+const mainScene = Somvas.createScene('main');</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Somvas.setScene(name)</h4>
+                            <p class="mb-2">Sets the current active scene.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> name (string)</p>
+                                <p><strong>Returns:</strong> void</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Set the active scene
+Somvas.setScene('main');</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Somvas.toggleDebug()</h4>
+                            <p class="mb-2">Toggles debug mode which visualizes colliders.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> none</p>
+                                <p><strong>Returns:</strong> void</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Toggle debug mode
+Somvas.toggleDebug();</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- GameObject API -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">GameObject</h3>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">new GameObject(x, y, layer)</h4>
+                            <p class="mb-2">Creates a new GameObject at the specified position.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> x (number), y (number), layer (number, default: 0)</p>
+                                <p><strong>Returns:</strong> GameObject instance</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Create a new GameObject
+const obj = new Somvas.GameObject(100, 200, 1);</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">addComponent(component)</h4>
+                            <p class="mb-2">Adds a component to the GameObject.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> component (Component instance)</p>
+                                <p><strong>Returns:</strong> this (for chaining)</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Add a rectangle component
+obj.addComponent(new Somvas.Rectangle(50, 50, 'blue'));</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">getComponent(type)</h4>
+                            <p class="mb-2">Gets a component of the specified type from the GameObject.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> type (Component class)</p>
+                                <p><strong>Returns:</strong> Component instance or undefined</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Get the Sprite component
+const sprite = obj.getComponent(Somvas.Sprite);</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">setCollider(type, ...args)</h4>
+                            <p class="mb-2">Adds a collider to the GameObject.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> type (Collider class), ...args (collider-specific parameters)</p>
+                                <p><strong>Returns:</strong> Collider instance</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Add a box collider
+obj.setCollider(Somvas.BoxCollider, 50, 50);
+
+// Add a circle collider
+obj.setCollider(Somvas.CircleCollider, 25);</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-mono text-lg font-semibold mb-2">checkCollision(other)</h4>
+                            <p class="mb-2">Checks if this GameObject collides with another GameObject.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> other (GameObject)</p>
+                                <p><strong>Returns:</strong> boolean</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Check collision with another GameObject
+if (player.checkCollision(enemy)) {
+    console.log('Collision detected!');
+}</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component API -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Components</h3>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Rectangle(width, height, color)</h4>
+                            <p class="mb-2">Creates a rectangle component with specified dimensions and color.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> width (number), height (number), color (string)</p>
+                                <p><strong>Returns:</strong> Rectangle component instance</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Create a red rectangle
+const rect = new Somvas.Rectangle(100, 50, 'red');</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Circle(radius, color)</h4>
+                            <p class="mb-2">Creates a circle component with specified radius and color.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> radius (number), color (string)</p>
+                                <p><strong>Returns:</strong> Circle component instance</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Create a blue circle
+const circle = new Somvas.Circle(30, 'blue');</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Sprite(image, width, height)</h4>
+                            <p class="mb-2">Creates a sprite component with an image.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> image (Image|string), width (number), height (number)</p>
+                                <p><strong>Returns:</strong> Sprite component instance</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Create a sprite from loaded image
+const sprite = new Somvas.Sprite(Somvas.AssetLoader.get('player'), 64, 64);
+
+// Or directly from image URL
+const sprite2 = new Somvas.Sprite('assets/player.png', 64, 64);</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Text(content, style)</h4>
+                            <p class="mb-2">Creates a text component with specified content and style.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> content (string), style (object)</p>
+                                <p><strong>Returns:</strong> Text component instance</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Create a text component
+const text = new Somvas.Text('Hello World', {
+    font: '20px Arial',
+    fill: 'white',
+    align: 'center'
+});</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AssetLoader API -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">AssetLoader</h3>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">AssetLoader.loadImage(key, url)</h4>
+                            <p class="mb-2">Loads a single image and stores it with the specified key.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> key (string), url (string)</p>
+                                <p><strong>Returns:</strong> Promise</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Load a single image
+Somvas.AssetLoader.loadImage('player', 'assets/player.png')
+    .then(() => console.log('Image loaded'))
+    .catch(err => console.error('Error loading image:', err));</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">AssetLoader.loadImages(images)</h4>
+                            <p class="mb-2">Loads multiple images specified as key-url pairs.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> images (object)</p>
+                                <p><strong>Returns:</strong> Promise</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Load multiple images
+Somvas.AssetLoader.loadImages({
+    player: 'assets/player.png',
+    enemy: 'assets/enemy.png',
+    background: 'assets/bg.jpg'
+}).then(() => console.log('All images loaded'));</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-mono text-lg font-semibold mb-2">AssetLoader.get(key)</h4>
+                            <p class="mb-2">Retrieves a loaded asset by its key.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> key (string)</p>
+                                <p><strong>Returns:</strong> Image or undefined</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Get a loaded image
+const playerImage = Somvas.AssetLoader.get('player');</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Input API -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Input</h3>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Input.isKeyPressed(key)</h4>
+                            <p class="mb-2">Checks if a key is currently pressed.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> key (string)</p>
+                                <p><strong>Returns:</strong> boolean</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Check if arrow key is pressed
+if (Somvas.Input.isKeyPressed('ArrowRight')) {
+    player.x += 5;
+}</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Input.isMousePressed()</h4>
+                            <p class="mb-2">Checks if the mouse button is currently pressed.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> none</p>
+                                <p><strong>Returns:</strong> boolean</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Check if mouse is pressed
+if (Somvas.Input.isMousePressed()) {
+    // Do something
+}</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Input.getMousePosition()</h4>
+                            <p class="mb-2">Gets the current mouse position relative to the canvas.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> none</p>
+                                <p><strong>Returns:</strong> {x: number, y: number}</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Get mouse position
+const mousePos = Somvas.Input.getMousePosition();
+console.log(`Mouse at: ${mousePos.x}, ${mousePos.y}`);</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-mono text-lg font-semibold mb-2">Input.getTouchPosition()</h4>
+                            <p class="mb-2">Gets the current touch position relative to the canvas.</p>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p><strong>Parameters:</strong> none</p>
+                                <p><strong>Returns:</strong> {x: number, y: number}</p>
+                            </div>
+                            <div class="relative">
+                                <pre class="language-javascript"><code>// Get touch position
+const touchPos = Somvas.Input.getTouchPosition();
+console.log(`Touch at: ${touchPos.x}, ${touchPos.y}`);</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Examples -->
+            <section id="examples" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Examples</h2>
+                
+                <div class="space-y-8">
+                    <!-- Hello World Example -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Hello World Example</h3>
+                        <p class="mb-4">A minimal example that creates a canvas with a blue rectangle.</p>
+                        
+                        <div class="relative">
+                            <pre class="language-html"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Somvas Hello World&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/gh/cabdiwaaxid-so/somvas@main/index.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;canvas id="gameCanvas"&gt;&lt;/canvas&gt;
+    
+    &lt;script&gt;
+        // Initialize the framework
+        Somvas.init('gameCanvas', 800, 600);
+        
+        // Create a scene
+        const scene = Somvas.createScene('main');
+        scene.background = '#f0f0f0';
+        
+        // Create a game object with a rectangle component
+        const rect = new Somvas.GameObject(400, 300);
+        rect.addComponent(new Somvas.Rectangle(100, 100, 'blue'));
+        scene.add(rect);
+        
+        // Set and start the scene
+        Somvas.setScene('main');
+        Somvas.start();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button id="run-hello-world" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md">
+                                Run in Browser
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Asset Loading Example -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Asset Loading Example</h3>
+                        <p class="mb-4">An example that loads an image and displays it as a sprite.</p>
+                        
+                        <div class="relative">
+                            <pre class="language-html"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Somvas Asset Loading&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/gh/cabdiwaaxid-so/somvas@main/index.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;canvas id="gameCanvas"&gt;&lt;/canvas&gt;
+    
+    &lt;script&gt;
+        // Initialize the framework
+        Somvas.init('gameCanvas', 800, 600);
+        
+        // Load an image
+        Somvas.AssetLoader.loadImage('player', 'https://placekitten.com/100/100')
+            .then(() => {
+                // Create a scene
+                const scene = Somvas.createScene('main');
+                scene.background = '#f0f0f0';
+                
+                // Create a game object with a sprite component
+                const player = new Somvas.GameObject(400, 300);
+                player.addComponent(new Somvas.Sprite(Somvas.AssetLoader.get('player'), 100, 100));
+                scene.add(player);
+                
+                // Set and start the scene
+                Somvas.setScene('main');
+                Somvas.start();
+            })
+            .catch(error => {
+                console.error('Error loading image:', error);
+            });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-1.5 rounded-md text-sm">
+                                Copy
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button id="run-asset-loading" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md">
+                                Run in Browser
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section id="troubleshooting" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Troubleshooting & FAQs</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Canvas sizing issues</h3>
+                        <p class="mb-2">If your canvas isn't displaying correctly, make sure to:</p>
+                        <ul class="list-disc pl-5 mb-2">
+                            <li>Set the canvas dimensions via CSS or JavaScript</li>
+                            <li>Call <code class="text-sm">Somvas.init()</code> after the DOM is fully loaded</li>
+                            <li>Check that the canvas element exists in the DOM</li>
+                        </ul>
+                        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <pre class="language-css"><code>/* CSS approach */
+#gameCanvas {
+    width: 800px;
+    height: 600px;
+    border: 1px solid black;
+}</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Mobile touch events not working</h3>
+                        <p class="mb-2">For touch events to work properly on mobile:</p>
+                        <ul class="list-disc pl-5 mb-2">
+                            <li>Ensure the viewport meta tag is set: <code class="text-sm">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></li>
+                            <li>Check that your touch handlers are added in the component's <code class="text-sm">update</code> method</li>
+                            <li>Test on actual mobile devices as browser emulators may not fully replicate touch behavior</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">CORS issues with asset loading</h3>
+                        <p class="mb-2">When loading assets from different domains, you may encounter CORS issues:</p>
+                        <ul class="list-disc pl-5 mb-2">
+                            <li>Host assets on the same domain as your game</li>
+                            <li>Configure your server to send proper CORS headers</li>
+                            <li>For development, use a local server instead of file:// protocol</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Performance optimization tips</h3>
+                        <p class="mb-2">To improve performance:</p>
+                        <ul class="list-disc pl-5 mb-2">
+                            <li>Limit the number of active GameObjects</li>
+                            <li>Use object pooling for frequently created/destroyed objects</li>
+                            <li>Minimize the use of expensive operations in the update loop</li>
+                            <li>Use the appropriate collider type (CircleCollider is less expensive than BoxCollider)</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Debug mode not showing colliders</h3>
+                        <p class="mb-2">If debug mode isn't visualizing colliders:</p>
+                        <ul class="list-disc pl-5 mb-2">
+                            <li>Make sure you've called <code class="text-sm">setCollider()</code> on your GameObjects</li>
+                            <li>Check that <code class="text-sm">Somvas.toggleDebug()</code> is called after the scene is set up</li>
+                            <li>Verify that your GameObjects have visible components (debug visuals may be hidden behind them)</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Game loop stops unexpectedly</h3>
+                        <p class="mb-2">If your game loop stops:</p>
+                        <ul class="list-disc pl-5 mb-2">
+                            <li>Check for unhandled exceptions in your update methods</li>
+                            <li>Ensure you're not calling <code class="text-sm">Somvas.stop()</code> somewhere unintentionally</li>
+                            <li>Verify that your scene has active GameObjects (empty scenes may be optimized out)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Changelog -->
+            <section id="changelog" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Changelog</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">v1.0.0 (Current)</h3>
+                        <ul class="list-disc pl-5">
+                            <li>Initial release of Somvas framework</li>
+                            <li>Core GameObject and Component system</li>
+                            <li>Scene management with background support</li>
+                            <li>Built-in components: Rectangle, Circle, Sprite, Text</li>
+                            <li>AssetLoader for loading images</li>
+                            <li>Input handling for keyboard, mouse, and touch</li>
+                            <li>Collision detection with BoxCollider and CircleCollider</li>
+                            <li>Debug mode for visualizing colliders</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Planned Features</h3>
+                        <ul class="list-disc pl-5">
+                            <li>Audio system with support for sound effects and music</li>
+                            <li>Particle system for visual effects</li>
+                            <li>Tilemap support for level design</li>
+                            <li>Animation system for sprite sheets</li>
+                            <li>Physics system with forces and gravity</li>
+                            <li>UI components for menus and HUDs</li>
+                            <li>NPM package for module-based development</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- License -->
+            <section id="license" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">License</h2>
+                
+                <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">MIT License</h3>
+                    
+                    <pre class="language-plaintext"><code>Copyright (c) 2023 Somvas Framework
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</code></pre>
+                </div>
+            </section>
+
+            <!-- Contact -->
+            <section id="contact" class="mb-12 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">Contact & Contribute</h2>
+                
+                <div class="space-y-4">
+                    <p>Somvas is an open-source project and we welcome contributions from the community.</p>
+                    
+                    <h3 class="text-lg font-semibold">How to Contribute</h3>
+                    <ul class="list-disc pl-5">
+                        <li>Fork the repository on GitHub</li>
+                        <li>Create a feature branch for your changes</li>
+                        <li>Submit a pull request with a clear description of your changes</li>
+                        <li>Ensure your code follows the existing style and includes appropriate tests</li>
+                    </ul>
+                    
+                    <h3 class="text-lg font-semibold">Reporting Issues</h3>
+                    <p>If you find a bug or have a feature request, please open an issue on GitHub with:</p>
+                    <ul class="list-disc pl-5">
+                        <li>A clear description of the problem or request</li>
+                        <li>Steps to reproduce the issue (for bugs)</li>
+                        <li>Information about your environment (browser, OS, etc.)</li>
+                    </ul>
+                    
+                    <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg border border-blue-100 dark:border-blue-800 mt-4">
+                        <p class="text-blue-800 dark:text-blue-200"><strong>GitHub Repository:</strong> <a href="#" class="underline">https://github.com/cabdiwaaxid-so/somvas</a></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-800 py-8 border-t border-gray-200 dark:border-gray-700 no-print">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h2 class="text-xl font-bold text-primary-600 dark:text-primary-400">Somvas</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Lightweight 2D Game Framework</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">GitHub</a>
+                    <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">Documentation</a>
+                    <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">Examples</a>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+                <p>&copy; 2023 Somvas Framework. Released under the MIT License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hidden JSON API summary -->
+    <script type="application/json" id="api-summary" class="hidden">
+        {
+            "name": "Somvas",
+            "version": "1.0.0",
+            "description": "Lightweight 2D Game Framework for JavaScript",
+            "api": [
+                {
+                    "name": "init",
+                    "type": "method",
+                    "description": "Initializes the framework with a canvas element"
+                },
+                {
+                    "name": "start",
+                    "type": "method",
+                    "description": "Starts the game loop"
+                },
+                {
+                    "name": "stop",
+                    "type": "method",
+                    "description": "Stops the game loop"
+                },
+                {
+                    "name": "createScene",
+                    "type": "method",
+                    "description": "Creates a new scene with the given name"
+                },
+                {
+                    "name": "setScene",
+                    "type": "method",
+                    "description": "Sets the current active scene"
+                },
+                {
+                    "name": "toggleDebug",
+                    "type": "method",
+                    "description": "Toggles debug mode which visualizes colliders"
+                },
+                {
+                    "name": "GameObject",
+                    "type": "class",
+                    "description": "Basic entity in the game with position, rotation, and components"
+                },
+                {
+                    "name": "Rectangle",
+                    "type": "component",
+                    "description": "Renders a rectangle with specified dimensions and color"
+                },
+                {
+                    "name": "Circle",
+                    "type": "component",
+                    "description": "Renders a circle with specified radius and color"
+                },
+                {
+                    "name": "Sprite",
+                    "type": "component",
+                    "description": "Renders an image as a sprite"
+                },
+                {
+                    "name": "Text",
+                    "type": "component",
+                    "description": "Renders text with specified style"
+                },
+                {
+                    "name": "AssetLoader",
+                    "type": "utility",
+                    "description": "Loads and manages assets like images"
+                },
+                {
+                    "name": "Input",
+                    "type": "utility",
+                    "description": "Handles keyboard, mouse, and touch input"
+                },
+                {
+                    "name": "BoxCollider",
+                    "type": "collider",
+                    "description": "Axis-aligned bounding box collider"
+                },
+                {
+                    "name": "CircleCollider",
+                    "type": "collider",
+                    "description": "Circle-shaped collider"
+                }
+            ]
+        }
+    </script>
+
+    <script>
+        // Initialize highlight.js
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIconLight = document.getElementById('theme-icon-light');
+        const themeIconDark = document.getElementById('theme-icon-dark');
+        
+        // Check for saved theme preference or respect OS preference
+        if (localStorage.getItem('color-theme') === 'dark' || 
+            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeIconLight.classList.remove('hidden');
+            themeIconDark.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeIconLight.classList.add('hidden');
+            themeIconDark.classList.remove('hidden');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            // Toggle theme
+            document.documentElement.classList.toggle('dark');
+            
+            // Update icons
+            themeIconLight.classList.toggle('hidden');
+            themeIconDark.classList.toggle('hidden');
+            
+            // Save preference
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('color-theme', 'dark');
+            } else {
+                localStorage.setItem('color-theme', 'light');
+            }
+        });
+
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Copy button functionality
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const codeBlock = button.parentElement.querySelector('code');
+                const textToCopy = codeBlock.textContent;
+                
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    // Visual feedback
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+        });
+
+        // TOC highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.toc-link');
+        
+        function highlightToc() {
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', highlightToc);
+        window.addEventListener('load', highlightToc);
+
+        // Generate on-this-page TOC
+        const onThisPage = document.getElementById('on-this-page');
+        const headings = document.querySelectorAll('h2, h3');
+        
+        headings.forEach(heading => {
+            if (heading.id) {
+                const level = heading.tagName.toLowerCase();
+                const link = document.createElement('a');
+                link.href = `#${heading.id}`;
+                link.className = `block py-1 text-sm ${level === 'h2' ? 'pl-4 font-medium' : 'pl-6'} text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400`;
+                link.textContent = heading.textContent;
+                
+                onThisPage.appendChild(link);
+            }
+        });
+
+        // Run example buttons
+        document.getElementById('run-hello-world').addEventListener('click', () => {
+            const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Somvas Hello World</title>
+    <script src="https://cdn.jsdelivr.net/gh/cabdiwaaxid-so/somvas@main/index.js"><\/script>
+</head>
+<body style="margin:0;overflow:hidden">
+    <canvas id="gameCanvas"><\/canvas>
+    
+    <script>
+        // Initialize the framework
+        Somvas.init('gameCanvas', 800, 600);
+        
+        // Create a scene
+        const scene = Somvas.createScene('main');
+        scene.background = '#f0f0f0';
+        
+        // Create a game object with a rectangle component
+        const rect = new Somvas.GameObject(400, 300);
+        rect.addComponent(new Somvas.Rectangle(100, 100, 'blue'));
+        scene.add(rect);
+        
+        // Set and start the scene
+        Somvas.setScene('main');
+        Somvas.start();
+    <\/script>
+</body>
+</html>`;
+            
+            const newWindow = window.open();
+            newWindow.document.write(html);
+            newWindow.document.close();
+        });
+        
+        document.getElementById('run-asset-loading').addEventListener('click', () => {
+            const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Somvas Asset Loading</title>
+    <script src="https://cdn.jsdelivr.net/gh/cabdiwaaxid-so/somvas@main/index.js"><\/script>
+</head>
+<body style="margin:0;overflow:hidden">
+    <canvas id="gameCanvas"><\/canvas>
+    
+    <script>
+        // Initialize the framework
+        Somvas.init('gameCanvas', 800, 600);
+        
+        // Load an image
+        Somvas.AssetLoader.loadImage('player', 'https://placekitten.com/100/100')
+            .then(() => {
+                // Create a scene
+                const scene = Somvas.createScene('main');
+                scene.background = '#f0f0f0';
+                
+                // Create a game object with a sprite component
+                const player = new Somvas.GameObject(400, 300);
+                player.addComponent(new Somvas.Sprite(Somvas.AssetLoader.get('player'), 100, 100));
+                scene.add(player);
+                
+                // Set and start the scene
+                Somvas.setScene('main');
+                Somvas.start();
+            })
+            .catch(error => {
+                console.error('Error loading image:', error);
+            });
+    <\/script>
+</body>
+</html>`;
+            
+            const newWindow = window.open();
+            newWindow.document.write(html);
+            newWindow.document.close();
+        });
+    </script>
+</body>
+</html>
